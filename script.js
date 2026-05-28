@@ -181,15 +181,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const waitlistModal = document.getElementById('waitlist-modal');
     const modalCloseBtn = document.getElementById('modal-close');
     const modalTriggers = document.querySelectorAll('[data-modal-trigger]');
+    let activeTrigger = null;
 
-    const openModal = () => {
+    const openModal = (triggerEl) => {
         if (!waitlistModal) return;
+        activeTrigger = triggerEl;
         waitlistModal.setAttribute('aria-hidden', 'false');
         waitlistModal.classList.add('is-open');
         document.body.style.overflow = 'hidden';
         // Focus first focusable field after transition
         setTimeout(() => {
-            const firstInput = waitlistModal.querySelector('input, button');
+            const firstInput = waitlistModal.querySelector('input:not([type="hidden"]), button');
             if (firstInput) firstInput.focus();
         }, 150);
     };
@@ -199,11 +201,17 @@ document.addEventListener('DOMContentLoaded', () => {
         waitlistModal.setAttribute('aria-hidden', 'true');
         waitlistModal.classList.remove('is-open');
         document.body.style.overflow = '';
+        if (activeTrigger) {
+            activeTrigger.focus();
+            activeTrigger = null;
+        }
     };
 
     // All [data-modal-trigger] buttons open the modal
     modalTriggers.forEach(btn => {
-        btn.addEventListener('click', openModal);
+        btn.addEventListener('click', (e) => {
+            openModal(btn);
+        });
     });
 
     // Close on close button
@@ -218,10 +226,40 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Close on Escape key
+    // Close on Escape key & trap Focus inside modal (A11y Compliant)
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && waitlistModal && waitlistModal.classList.contains('is-open')) {
+        if (!waitlistModal || !waitlistModal.classList.contains('is-open')) return;
+
+        if (e.key === 'Escape') {
             closeModal();
+            return;
+        }
+
+        if (e.key === 'Tab') {
+            const focusableSelectors = 'button, [href], input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])';
+            const allElements = Array.from(waitlistModal.querySelectorAll(focusableSelectors));
+            const focusableElements = allElements.filter(el => {
+                return el.offsetParent !== null && !el.disabled;
+            });
+
+            if (focusableElements.length === 0) return;
+
+            const firstFocusable = focusableElements[0];
+            const lastFocusable = focusableElements[focusableElements.length - 1];
+
+            if (e.shiftKey) {
+                // Shift + Tab (backward tab)
+                if (document.activeElement === firstFocusable) {
+                    e.preventDefault();
+                    lastFocusable.focus();
+                }
+            } else {
+                // Tab (forward tab)
+                if (document.activeElement === lastFocusable) {
+                    e.preventDefault();
+                    firstFocusable.focus();
+                }
+            }
         }
     });
 

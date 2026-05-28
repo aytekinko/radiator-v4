@@ -52,6 +52,8 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
     color: var(--text-white);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 /* Smooth background ambient glows */
@@ -833,7 +835,7 @@ body::after {
 .ba-slider {
     position: relative;
     width: 100%;
-    aspect-ratio: 1.25 / 1;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -841,6 +843,7 @@ body::after {
     user-select: none;
     -webkit-user-select: none;
     background: var(--bg-card);
+    touch-action: none;
 }
 
 .ba-slider:focus-visible {
@@ -1660,6 +1663,9 @@ body::after {
     user-select: none;
     color: var(--text-muted);
     line-height: 1.45;
+    min-height: 44px;
+    padding-top: 12px;
+    padding-bottom: 12px;
 }
 
 .checkbox-container input {
@@ -1672,7 +1678,7 @@ body::after {
 
 .checkmark {
     position: absolute;
-    top: 2px;
+    top: 12px;
     left: 0;
     height: 20px;
     width: 20px;
@@ -2514,4 +2520,232 @@ textarea:focus-visible {
     margin-left: auto;
     margin-right: auto;
 }
+
+/* ==========================================
+   MOBILE & TABLET RESPONSIVE PASS (WOW EFFECT)
+   ========================================== */
+
+/* 1. Global safe viewport and body settings */
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 85px; /* Prevent sticky bottom CTA from covering footer details */
+    }
+}
+
+/* 2. Header and Navigation optimizations */
+@media (max-width: 480px) {
+    .header-container {
+        height: 64px;
+        padding: 0 16px;
+    }
+    
+    .brand-logo {
+        height: 36px;
+    }
+    
+    .brand-name {
+        font-size: 1.1rem;
+    }
+    
+    .mobile-drawer {
+        top: 64px;
+        height: calc(100vh - 64px);
+    }
+}
+
+/* On extremely small screens under 360px wide, hide 'NL' or shrink further to avoid collision */
+@media (max-width: 360px) {
+    .brand-name {
+        font-size: 0.95rem;
+    }
+    .brand-logo {
+        height: 32px;
+    }
+    .header-container {
+        padding: 0 12px;
+    }
+}
+
+/* Burger menu larger touch target */
+.mobile-menu-toggle {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    transition: var(--transition-smooth);
+}
+
+/* 3. Hero section spacing and typography */
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 90px 0 50px 0; /* Compact but premium */
+    }
+    
+    .hero-content h1 {
+        font-size: 1.9rem; /* Perfectly sizes long Dutch words */
+        margin-bottom: 16px;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.98rem;
+        margin-bottom: 24px;
+    }
+    
+    .logo-showcase-card {
+        padding: 24px 16px;
+        max-width: 100%;
+    }
+    
+    .hero-logo-img {
+        width: 150px;
+    }
+}
+
+/* 4. Section headings text wrapping and size */
+@media (max-width: 480px) {
+    .section {
+        padding: 40px 0;
+    }
+    
+    .section-header {
+        margin-bottom: 30px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.7rem; /* Prevents overflow of complex headers */
+        margin-bottom: 12px;
+    }
+    
+    .section-description {
+        font-size: 0.95rem;
+    }
+}
+
+/* 5. Before/After slider optimizations */
+@media (max-width: 480px) {
+    .ba-slider-wrapper {
+        padding: 6px;
+        max-width: 100%; /* Take full available width */
+    }
+    
+    /* Diagonal labels never overlap but let's shrink slightly on mobile */
+    .ba-label {
+        font-size: 0.58rem;
+        padding: 3px 8px;
+    }
+    
+    .ba-hint {
+        font-size: 0.72rem;
+        padding: 8px 10px;
+    }
+}
+
+/* 6. Savings Calculator responsive pass */
+@media (max-width: 600px) {
+    .calculator-card {
+        padding: 20px 16px; /* Drastically improves breathing room */
+        border-radius: var(--border-radius-md);
+    }
+    
+    .calc-grid {
+        gap: 24px;
+    }
+    
+    .calc-inputs {
+        gap: 20px;
+    }
+    
+    .calc-label {
+        font-size: 0.95rem;
+    }
+    
+    .calc-value-display {
+        font-size: 1.45rem;
+    }
+    
+    .result-box {
+        padding: 20px 14px;
+    }
+    
+    .result-value {
+        font-size: 2.4rem;
+    }
+    
+    .result-subtext {
+        font-size: 0.8rem;
+    }
+    
+    .stat-num {
+        font-size: 1.15rem;
+    }
+    
+    .calc-footer {
+        margin-top: 24px;
+        padding-top: 16px;
+        gap: 16px;
+    }
+}
+
+/* 7. Waitlist Modal enhancements for mobile & landscape */
+@media (max-width: 480px) {
+    .modal-card {
+        padding: 32px 18px; /* Fit tiny screen borders nicely */
+        border-radius: var(--border-radius-md);
+    }
+    
+    .modal-header h3 {
+        font-size: 1.35rem;
+    }
+    
+    .modal-header p {
+        font-size: 0.85rem;
+    }
+    
+    .form-group {
+        gap: 6px;
+    }
+    
+    .form-control {
+        padding: 12px 12px 12px 42px;
+        font-size: 0.9rem;
+    }
+    
+    .modal-close-btn {
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* Add support for small landscape viewports so modal doesn't crop */
+@media (max-height: 520px) {
+    .modal-card {
+        padding: 20px;
+        max-height: 95vh;
+    }
+    .modal-header {
+        margin-bottom: 12px;
+    }
+    .modal-header h3 {
+        font-size: 1.25rem;
+        margin-bottom: 4px;
+    }
+    .modal-header p {
+        display: none; /* Hide descriptive subtext to save vertical space on short landscapes */
+    }
+}
+
+/* iOS momentum scroll */
+.modal-card {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* 8. Sticky Bottom mobile CTA safe area notches */
+.mobile-sticky-cta {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+}
+
 

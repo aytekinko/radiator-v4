@@ -82,8 +82,8 @@
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script type="module" crossorigin src="/assets/index-DrvzDp1h.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-Cg2lWjv-.css">
+  <script type="module" crossorigin src="/assets/index-Bg_XJw8D.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DOijXGDQ.css">
 </head>
 <body>
 
@@ -309,9 +309,9 @@
                         </div>
                     </div>
                     <div class="equipment-visual">
-                        <div class="equipment-image-container glass-panel">
-                            <div class="equipment-glow"></div>
-                            <img src="/assets/cleaning_machine-hfXZU9dv.png" alt="Professionele reinigingsapparatuur" class="equipment-img" width="600" height="400" loading="lazy">
+                        <div class="equipment-image-wrapper glass-panel">
+                            <!-- Image representing the cleaning equipment / tech -->
+                            <img src="/assets/cleaning_machine-hfXZU9dv.png" alt="Professionele radiator reinigingsapparatuur" width="600" height="400" class="responsive-img" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -599,13 +599,19 @@
                 <h3 id="modal-title">Binnenkort beschikbaar in Nederland</h3>
                 <p id="modal-desc">We bereiden momenteel onze professionele radiatorreinigingsservice voor. Laat vrijblijvend je e-mailadres en postcode achter en ontvang als eerste updates, beschikbaarheid en introductieacties.</p>
             </div>
-            
-            <form id="modal-lead-form" class="premium-form" novalidate>
+
+            <!-- Formspree global error banner -->
+            <div data-fs-error class="formspree-global-error" style="display:none" role="alert">
+                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                <span>Er is iets misgegaan. Probeer het opnieuw of neem contact op.</span>
+            </div>
+
+            <form id="modal-lead-form" class="premium-form" action="https://formspree.io/f/xeedvvnp" method="POST" novalidate>
                 <div class="form-group">
                     <label for="modal-naam" class="form-label">Naam <span class="text-muted">(Optioneel)</span></label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-user input-icon" aria-hidden="true"></i>
-                        <input type="text" id="modal-naam" name="naam" placeholder="Bijv. Jan de Vries" autocomplete="name" class="form-control">
+                        <input type="text" id="modal-naam" name="naam" placeholder="Bijv. Jan de Vries" autocomplete="name" class="form-control" data-fs-field>
                     </div>
                 </div>
                 
@@ -613,23 +619,23 @@
                     <label for="modal-email" class="form-label">E-mailadres <span class="required-star">*</span></label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-envelope input-icon" aria-hidden="true"></i>
-                        <input type="email" id="modal-email" name="email" placeholder="Bijv. jan@outlook.com" required aria-required="true" aria-invalid="false" aria-describedby="modal-email-error" autocomplete="email" class="form-control">
+                        <input type="email" id="modal-email" name="email" placeholder="Bijv. jan@outlook.com" required aria-required="true" aria-invalid="false" aria-describedby="modal-email-error" autocomplete="email" class="form-control" data-fs-field>
                     </div>
-                    <span class="error-message" id="modal-email-error" role="alert">Vul a.u.b. een geldig e-mailadres in.</span>
+                    <span class="error-message" id="modal-email-error" data-fs-error="email" role="alert">Vul a.u.b. een geldig e-mailadres in.</span>
                 </div>
                 
                 <div class="form-group">
                     <label for="modal-postcode" class="form-label">Postcode <span class="required-star">*</span></label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-map-pin input-icon" aria-hidden="true"></i>
-                        <input type="text" id="modal-postcode" name="postcode" placeholder="Bijv. 1234 AB" required aria-required="true" aria-invalid="false" aria-describedby="modal-postcode-error" autocomplete="postal-code" class="form-control" maxlength="8">
+                        <input type="text" id="modal-postcode" name="postcode" placeholder="Bijv. 1234 AB" required aria-required="true" aria-invalid="false" aria-describedby="modal-postcode-error" autocomplete="postal-code" class="form-control" maxlength="8" data-fs-field>
                     </div>
                     <span class="error-message" id="modal-postcode-error" role="alert">Vul een geldige postcode in (bijv. 1234 AB).</span>
                 </div>
                 
                 <div class="form-group checkbox-group">
                     <label class="checkbox-container">
-                        <input type="checkbox" id="modal-toestemming" name="toestemming" required aria-required="true" aria-invalid="false" aria-describedby="modal-toestemming-error">
+                        <input type="checkbox" id="modal-toestemming" name="toestemming" required aria-required="true" aria-invalid="false" aria-describedby="modal-toestemming-error" data-fs-field>
                         <span class="checkmark"></span>
                         <span class="checkbox-text">
                             Ik ga akkoord dat Radiator Reiniger NL mij mag contacteren over de pre-registratie en updates. <span class="required-star">*</span>
@@ -638,7 +644,10 @@
                     <span class="error-message" id="modal-toestemming-error" role="alert">Toestemming is verplicht.</span>
                 </div>
                 
-                <button type="submit" class="submit-btn primary-btn" id="modal-submit-btn">
+                <!-- Formspree special field: custom email subject -->
+                <input type="hidden" name="_subject" value="🔔 Nieuwe aanmelding - Radiator Reiniger NL">
+
+                <button type="submit" class="submit-btn primary-btn" id="modal-submit-btn" data-fs-submit-btn aria-label="Verstuur aanmelding">
                     Meld mij aan <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
                 </button>
                 
@@ -648,7 +657,7 @@
             </form>
             
             <!-- Success State -->
-            <div class="form-success-state" id="modal-form-success" aria-hidden="true" style="display: none;">
+            <div class="form-success-state" id="modal-form-success" data-fs-success aria-hidden="true" style="display: none;">
                 <div class="success-icon-wrapper">
                     <i class="fa-solid fa-circle-check"></i>
                 </div>
