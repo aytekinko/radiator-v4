@@ -1748,6 +1748,24 @@ body::after {
     box-shadow: 0 0 8px rgba(239, 68, 68, 0.15) !important;
 }
 
+.formspree-global-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: var(--error-red);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.formspree-global-error i {
+    font-size: 1.1rem;
+}
+
 .form-control.is-invalid + .input-icon {
     color: var(--error-red);
 }

@@ -283,9 +283,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Form submit
+        // Form submit — fully custom fetch for maximum reliability
         modalLeadForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            e.stopImmediatePropagation();
 
             const emailValid = validateEmail(modalEmailEl ? modalEmailEl.value.trim() : '');
             const postcodeValid = validatePostcode(modalPostcodeEl ? modalPostcodeEl.value.trim() : '');
@@ -309,24 +310,73 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalSubmitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Bezig...';
             }
 
-            // Simulate async submit
-            setTimeout(() => {
-                const emailVal = modalEmailEl ? modalEmailEl.value.trim() : '';
-                if (modalSuccessEmailDisplay) modalSuccessEmailDisplay.textContent = emailVal;
+            const emailVal = modalEmailEl ? modalEmailEl.value.trim() : '';
+            const postcodeVal = modalPostcodeEl ? modalPostcodeEl.value.trim() : '';
+            const naamEl = document.getElementById('modal-naam');
+            const naamVal = naamEl ? naamEl.value.trim() : '';
 
-                // Show success state, hide form
-                if (modalLeadForm) modalLeadForm.style.display = 'none';
-                if (modalFormSuccess) {
-                    modalFormSuccess.style.display = 'flex';
-                    modalFormSuccess.setAttribute('aria-hidden', 'false');
+            // Build payload exactly as Formspree expects
+            const payload = {
+                email: emailVal,
+                postcode: postcodeVal,
+                toestemming: modalToestemmingEl.checked ? 'Ja' : 'Nee',
+                _subject: '🔔 Nieuwe aanmelding - Radiator Reiniger NL'
+            };
+            if (naamVal) payload.naam = naamVal;
+
+            fetch('https://formspree.io/f/xeedvvnp', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(async response => {
+                if (response.ok) {
+                    // SUCCESS
+                    if (modalSuccessEmailDisplay) modalSuccessEmailDisplay.textContent = emailVal;
+                    if (modalLeadForm) modalLeadForm.style.display = 'none';
+                    if (modalFormSuccess) {
+                        modalFormSuccess.style.display = 'flex';
+                        modalFormSuccess.setAttribute('aria-hidden', 'false');
+                    }
+                } else {
+                    // Formspree returned an error (e.g. invalid email)
+                    let errMsg = 'Er is iets misgegaan. Probeer het opnieuw.';
+                    try {
+                        const data = await response.json();
+                        if (data && data.errors && data.errors.length > 0) {
+                            errMsg = data.errors.map(err => err.message).join(', ');
+                        }
+                    } catch (_) {}
+                    
+                    const globalErr = document.querySelector('.formspree-global-error');
+                    if (globalErr) {
+                        globalErr.style.display = 'flex';
+                        globalErr.querySelector('span').textContent = errMsg;
+                    } else {
+                        alert(errMsg);
+                    }
                 }
-
-                // Reset submit button for next time
+            })
+            .catch(() => {
+                // Network error
+                const globalErr = document.querySelector('.formspree-global-error');
+                if (globalErr) {
+                    globalErr.style.display = 'flex';
+                    globalErr.querySelector('span').textContent = 'Geen internetverbinding. Controleer je verbinding en probeer het opnieuw.';
+                } else {
+                    alert('Geen internetverbinding.');
+                }
+            })
+            .finally(() => {
+                // Restore button state
                 if (modalSubmitBtn) {
                     modalSubmitBtn.disabled = false;
                     modalSubmitBtn.innerHTML = 'Meld mij aan <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>';
                 }
-            }, 1000);
+            });
         });
 
         // Reset / close from success state
